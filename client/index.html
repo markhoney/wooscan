@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta charset="utf-8">
+		<meta name="robots" content="noindex, nofollow">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=0">
+		<title>Woo Scan | SBH</title>
+
+		<script src="https://cdn.polyfill.io/v2/polyfill.min.js"></script>
+		<script src="https://unpkg.com/lodash/lodash.min.js"></script>
+		<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+		<script src="https://unpkg.com/vue/dist/vue.js"></script> <!-- Replace with .min versions of vue, vuex and vuetify in production -->
+		<script src="https://unpkg.com/vue-timeago/dist/vue-timeago.js"></script>
+		<script src="https://unpkg.com/buefy"></script>
+		<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+
+		<script src="https://unpkg.com/socket.io-client/dist/socket.io.slim.js"></script>
+
+		<link rel="stylesheet" href="https://unpkg.com/buefy/lib/buefy.min.css">
+		<link rel="stylesheet" href="https://unpkg.com/font-awesome/css/font-awesome.min.css">
+
+		<script src="/client.js"></script>
+	</head>
+	<body>
+		<div id="root">
+			<nav class="navbar is-info level" role="navigation" aria-label="main navigation">
+				<div class="navbar-brand">
+					<a class="navbar-item" href="http://localhost:3000/">
+						<h1 class="is-size-2">SBH Woo Scan</h1>
+					</a>
+				</div>
+				<h1 class="level-item is-size-2">{{title}} {{tab}}</h1>
+			</nav>
+			<b-tabs class="is-info" size="is-medium" v-model="tab" expanded>
+				<b-tab-item label="Projects" icon="locker_multiple">
+					<b-table :data="searchresults" :mobile-cards="true" default-sort-direction="desc" :paginated="true" :striped="true">
+						<template slot-scope="props">
+							<b-table-column label="Title"><a :href="props.row.link">{{props.row.title}}</a></b-table-column>
+							<!--<b-table-column label="Text">{{props.row.description}}</b-table-column>-->
+							<b-table-column label="Text"><highlight :msg="props.row.description" :search="search" effect='has-text-danger has-text-weight-bold'></highlight>
+						</template>
+					</b-table>
+				</b-tab-item>
+				<b-tab-item label="Pages" icon="book-open-page-variant">
+					<h2>Pages</h2>
+				</b-tab-item>
+				<b-tab-item label="Scans" icon="magnify">
+					<h2>Scans</h2>
+				</b-tab-item>
+			</b-tabs>
+			<footer class="footer">
+
+			</footer>
+		</div>
+	</body>
+</html>

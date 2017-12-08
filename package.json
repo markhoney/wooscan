@@ -1,0 +1,28 @@
+{
+	"name": "wooscan",
+	"version": "0.1.0",
+	"description": "A tool to automate finding and monitoring of non-compliant NZ websites",
+	"main": "app.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"author": "Mark Honeychurch",
+	"license": "ISC",
+	"dependencies": {
+		"axios": "^0.17.1",
+		"buefy": "^1.0.0",
+		"google": "^2.1.0",
+		"koa": "^2.4.1",
+		"koa-router": "^7.3.0",
+		"koa-send": "^4.1.1",
+		"koa-socket": "^4.4.0",
+		"lodash": "^4.17.4",
+		"nedb": "^1.8.0",
+		"sanitize-filename": "^1.6.1",
+		"sanitize-html": "^1.16.1",
+		"vue": "^2.5.9",
+		"vue-router": "^3.0.1",
+		"vue-timeago": "^3.4.1",
+		"webshot": "^0.18.0"
+	}
+}
