@@ -61,7 +61,7 @@ io.on('search', function(client) { // Initial handshake to check Websocket is wo
 	client.socket.emit('search', getGoogleResults(client.data));
 });
 
-io.on('handshake', function(client) { // Initial handshake to check Websocket is working
+/*io.on('handshake', function(client) { // Initial handshake to check Websocket is working
 	console.log("Received:", client.data); // Log it
 	if (client.data == "syn") {
 		client.socket.emit('handshake', 'syn-ack');
@@ -70,10 +70,10 @@ io.on('handshake', function(client) { // Initial handshake to check Websocket is
 		client.socket.emit('handshake', 'ack');
 		console.log("Sent:", 'ack'); // Log it
 	}
-});
+});*/
 
 
-io.on('search', function(client) { // Initial handshake to check Websocket is working
+io.on('search', function(client) {
 	google(client.data, function (err, res) {
 		if (err) {
 			console.error(err);
@@ -81,5 +81,15 @@ io.on('search', function(client) { // Initial handshake to check Websocket is wo
 		} else {
 			client.socket.emit('search', res.links);
 		}
+	});
+});
+
+io.on('page', function(client) {
+	axios.get(client.data).then(function (response) {
+		client.socket.emit('page', sanitisehtml(response.data, {allowedTags: []}));
+	})
+	.catch(function (err) {
+		console.error(err);
+		return false;
 	});
 });

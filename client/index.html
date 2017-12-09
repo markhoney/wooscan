@@ -35,6 +35,30 @@
 			</nav>
 			<b-tabs class="is-info" size="is-medium" v-model="tab" expanded>
 				<b-tab-item label="Projects" icon="locker_multiple">
+					<b-collapse class="card" v-for="(project, title) in projects" :open="false">
+						<div slot="trigger" class="card-header">
+							<p class="card-header-title">{{title}}</p>
+						</div>
+						<div class="card-content">
+							<div class="content">
+								{{project.description}}
+								<div v-for="search in project.searches">
+									<div class="columns">
+										<div class="column"><b-field label="Required Words"><b-input type="textarea" v-model="search.required"></b-input></b-field></div>
+										<div class="column"><b-field label="Key Words">     <b-input type="textarea" v-model="search.key"></b-input></b-field></div>
+										<div class="column"><b-field label="Excluded Words"><b-input type="textarea" v-model="search.excluded"></b-input></b-field></div>
+										<div class="column"><b-field label="NZ Only"><b-switch v-model="search.nz"></b-switch></b-field></div>
+									</div>
+									<b-field label="Google Search String"><b-input type="textarea" readonly :value="searchString(search)"></b-input></b-field>
+								</div>
+							</div>
+						</div>
+						<footer class="card-footer">
+							<a class="card-footer-item" onclick="myFunction()">Search</a>
+						</footer>
+					</b-collapse>
+				</b-tab-item>
+				<b-tab-item label="Pages" icon="book-open-page-variant">
 					<b-table :data="searchresults" :mobile-cards="true" default-sort-direction="desc" :paginated="true" :striped="true">
 						<template slot-scope="props">
 							<b-table-column label="Title"><a :href="props.row.link">{{props.row.title}}</a></b-table-column>
@@ -43,8 +67,8 @@
 						</template>
 					</b-table>
 				</b-tab-item>
-				<b-tab-item label="Pages" icon="book-open-page-variant">
-					<h2>Pages</h2>
+				<b-tab-item label="Issues" icon="alert">
+					<h2>Issues</h2>
 				</b-tab-item>
 				<b-tab-item label="Scans" icon="magnify">
 					<h2>Scans</h2>
