@@ -1,7 +1,4 @@
-const Datastore = new require('nedb');
-const db = {};
-db.projects = new Datastore({filename: 'db/projects.db', autoload: true});
-db.pages = new Datastore({filename: 'db/pages.db', autoload: true});
+const db = new (require('tingodb')()).Db('db/woo.db', {});;
 
 const _ = require('lodash');
 const webshot = require('webshot');
@@ -40,6 +37,16 @@ function getGoogleResults(search) {
 			console.error(err);
 			return false;
 		} else {
+			res.links.forEach(function(link) {
+				link._id = link.link;
+				delete link.link;
+				delete link.href;
+				link.created = new Date();
+				link.modified = link.created;
+				//console.log(link);
+			});
+			console.log(res.links);
+			db.collection("pages").insert(res.links);
 			return res.links;
 		}
 	});
@@ -57,9 +64,9 @@ app.listen(port);
 
 console.log("Listening on port:", port);
 
-io.on('search', function(client) { // Initial handshake to check Websocket is working
+/*io.on('search', function(client) { // Initial handshake to check Websocket is working
 	client.socket.emit('search', getGoogleResults(client.data));
-});
+});*/
 
 /*io.on('handshake', function(client) { // Initial handshake to check Websocket is working
 	console.log("Received:", client.data); // Log it
@@ -72,8 +79,8 @@ io.on('search', function(client) { // Initial handshake to check Websocket is wo
 	}
 });*/
 
-
 io.on('search', function(client) {
+	getGoogleResults(client.data);
 	google(client.data, function (err, res) {
 		if (err) {
 			console.error(err);

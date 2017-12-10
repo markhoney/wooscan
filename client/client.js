@@ -31,12 +31,11 @@ document.addEventListener('DOMContentLoaded', function() {
 		return (arr ? arr.map(quoteIfSpace(e)) : []);
 	}*/
 
-	function addQuotes(arr) {
-		console.log(typeof arr);
-		if (arr && typeof arr == "object" && arr != []) {
-			return arr.map(function(e) {if (e.indexOf(" ") >= 0) return '"' + e + '"'; return e});
+	function formatSearch(text, prefix, join) {
+		if (text) {
+			return text.split("\n").map(function(e) {if (e.indexOf(" ") >= 0) return prefix + '"' + e.trim() + '"'; return prefix + e.trim()}).filter(String).join(join) + " ";
 		}
-		return [];
+		return "";
 	}
 
 	function addNegate(arr) {
@@ -53,12 +52,12 @@ document.addEventListener('DOMContentLoaded', function() {
 			title: "Woo!",
 			tab: 0,
 			projects: {
-				Chiropractic: {description: "Chiropractic clinics based in New Zealand,", searches: [ //{required: ["Chiropractor","New Zealand"], nz: false}
-					{required: ["Chiropractor"], nz: false}
+				Chiropractic: {description: "Chiropractic clinics based in New Zealand", searches: [ //{required: ["Chiropractor","New Zealand"], nz: false}
+					{required: "Chiropractor", nz: false, shop: false}
 				]},
 				Acupuncture: {description: "Terms in the Medicines Act along with the word acupuncture", searches: [
-					{required: ["acupuncture"], key: ["Alcoholism","Appendicitis","Arteriosclerosis","Arthritis","Baldness","Blood pressure","Bust","Cancer","Cataract","Nervous system","Diabetes","Diphtheria","Dropsy","Epilepsy","Gallstones","Kidney stones","Bladder stones","Gangrene","Glaucoma","Goitre","Heart disease","Infertility","Leukemia"], excluded: ["animal","vet"], nz: true},
-					{required: ["acupuncture"], key: ["Mental disorder","Menopause","Menstrual","Nephritis","Pernicious","anaemia","Pleurisy","Pneumonia","Poliomyelitis","Prostate","Septicaemia","Sexual impotence","Smallpox","Tetanus","Thrombosis","Trachoma","Tuberculosis","Tumours","Typhoid Fever","Ulcers","Venereal"], excluded: ["animal","vet"], nz: true}
+					{required: "acupuncture", key: "Alcoholism\nAppendicitis\nArteriosclerosis\nArthritis\nBaldness\nBlood pressure\nBust\nCancer\nCataract\nNervous system\nDiabetes\nDiphtheria\nDropsy\nEpilepsy\nGallstones\nKidney stones\nBladder stones\nGangrene\nGlaucoma\nGoitre\nHeart disease\nInfertility\nLeukemia", excluded: "animal\nvet", nz: true, shop: false},
+					{required: "acupuncture", key: "Mental disorder\nMenopause\nMenstrual\nNephritis\nPernicious\nanaemia\nPleurisy\nPneumonia\nPoliomyelitis\nProstate\nSepticaemia\nSexual impotence\nSmallpox\nTetanus\nThrombosis\nTrachoma\nTuberculosis\nTumours\nTyphoid Fever\nUlcers\nVenereal", excluded: "animal\nvet", nz: true, shop: false}
 				]},
 			},
 			searchresults: [{title: "", link: "", description: "", href: ""}],
@@ -71,8 +70,8 @@ document.addEventListener('DOMContentLoaded', function() {
 		},
 		methods: {
 			searchString: function(search) {
-				console.log(typeof search.required);
-				return (addQuotes(search.required).join(" ")  + " " + addQuotes(search.key).join(" OR ") + " " + addNegate(addQuotes(search.excluded)).join(" ") + (search.nz ? " site:nz" : "")).trim().split(" ").filter(String).join(" ");
+				//return (addQuotes(search.required).join(" ")  + " " + addQuotes(search.key).join(" OR ") + " " + addNegate(addQuotes(search.excluded)).join(" ") + (search.nz ? " site:nz" : "")).trim().split(" ").filter(String).join(" ");
+				return (formatSearch(search.required, "", " ") + formatSearch(search.key, "", "|") + formatSearch(search.excluded, "-", " ") + (search.nz ? "site:nz " : "") + (search.shop ? "cart|appointment|practitioner|booking|service|buy|price -site:mightyape.co.nz -site:fishpond.co.nz" : "")).trim();
 			}
 		}
 	});
@@ -86,7 +85,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		console.log("socket.io connected"); // Log our connection
 		//socket.emit('handshake', 'syn');
 		//console.log("Sent:", "syn");
-		//socket.emit('search', vm.search);
+		socket.emit('search', vm.search);
 	});
 	socket.on('disconnect', function() { // When we've been disconnected
 		console.log("socket.io disconnected"); // Log our disconnection

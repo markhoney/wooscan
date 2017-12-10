@@ -28,10 +28,10 @@
 			<nav class="navbar is-info level" role="navigation" aria-label="main navigation">
 				<div class="navbar-brand">
 					<a class="navbar-item" href="http://localhost:3000/">
-						<h1 class="is-size-2">SBH Woo Scan</h1>
+						<h1 class="is-size-2">Woo Scan</h1>
 					</a>
 				</div>
-				<h1 class="level-item is-size-2">{{title}} {{tab}}</h1>
+				<h1 class="level-item is-size-2">{{title}}</h1>
 			</nav>
 			<b-tabs class="is-info" size="is-medium" v-model="tab" expanded>
 				<b-tab-item label="Projects" icon="locker_multiple">
@@ -44,12 +44,21 @@
 								{{project.description}}
 								<div v-for="search in project.searches">
 									<div class="columns">
-										<div class="column"><b-field label="Required Words"><b-input type="textarea" v-model="search.required"></b-input></b-field></div>
-										<div class="column"><b-field label="Key Words">     <b-input type="textarea" v-model="search.key"></b-input></b-field></div>
-										<div class="column"><b-field label="Excluded Words"><b-input type="textarea" v-model="search.excluded"></b-input></b-field></div>
-										<div class="column"><b-field label="NZ Only"><b-switch v-model="search.nz"></b-switch></b-field></div>
+										<div class="column">
+											<b-field label="Base Words"><b-input type="textarea" v-model="search.required"></b-input></b-field>All base words will be required in the search results.<br>Base words will not be highlighted in the text.
+										</div>
+										<div class="column">
+											<b-field label="Key Words"><b-input type="textarea" v-model="search.key"></b-input></b-field>One or more key words will be required in the search results.<br>Key words will be highlighted in the text.
+										</div>
+										<div class="column">
+											<b-field label="Excluded Words"><b-input type="textarea" v-model="search.excluded"></b-input></b-field>Search results with excluded words will not be shown.
+										</div>
+										<div class="column">
+											<b-field label="NZ Only"><b-switch v-model="search.nz"></b-switch></b-field>Results will be restricted to websites with a .nz domain name.
+											<b-field label="Shops"><b-switch v-model="search.shop"></b-switch></b-field>The search will look for common words used in online shops, and will exclude shops that give false positives.
+										</div>
 									</div>
-									<b-field label="Google Search String"><b-input type="textarea" readonly :value="searchString(search)"></b-input></b-field>
+									<b-field label="Google Search String" :type="(searchString(search).split(/[\s|]+/).length > 32 ? 'is-danger' : '')"><b-input type="textarea" readonly :value="searchString(search)"></b-input></b-field>Maximum of 32 words
 								</div>
 							</div>
 						</div>
