@@ -1,4 +1,4 @@
-const db = new (require('tingodb')()).Db('db/woo.db', {});;
+const db = new (require('tingodb')()).Db('db', {});
 
 const _ = require('lodash');
 const webshot = require('webshot');
@@ -32,21 +32,24 @@ function scrapePage(url) {
 }
 
 function getGoogleResults(search) {
-	google(search, function (err, res) {
+	google(search, function(err, res) {
 		if (err) {
 			console.error(err);
 			return false;
 		} else {
 			res.links.forEach(function(link) {
-				link._id = link.link;
-				delete link.link;
+				link._id = link.href;
 				delete link.href;
+				delete link.link;
 				link.created = new Date();
 				link.modified = link.created;
 				//console.log(link);
 			});
-			console.log(res.links);
-			db.collection("pages").insert(res.links);
+			console.log("Inserting!");
+			//console.log(db);
+			db.collection("pages").insert(res.links, function(err, result) {
+				console.log(err);
+			});
 			return res.links;
 		}
 	});

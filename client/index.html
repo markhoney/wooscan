@@ -45,10 +45,10 @@
 								<div v-for="search in project.searches">
 									<div class="columns">
 										<div class="column">
-											<b-field label="Base Words"><b-input type="textarea" v-model="search.required"></b-input></b-field>All base words will be required in the search results.<br>Base words will not be highlighted in the text.
+											<b-field label="Base Words"><b-input type="textarea" v-model="search.therapy"></b-input></b-field>All base words will be required in the search results.<br>Base words will not be highlighted in the text.
 										</div>
 										<div class="column">
-											<b-field label="Key Words"><b-input type="textarea" v-model="search.key"></b-input></b-field>One or more key words will be required in the search results.<br>Key words will be highlighted in the text.
+											<b-field label="Key Words"><b-input type="textarea" v-model="search.claims"></b-input></b-field>One or more key words will be required in the search results.<br>Key words will be highlighted in the text.
 										</div>
 										<div class="column">
 											<b-field label="Excluded Words"><b-input type="textarea" v-model="search.excluded"></b-input></b-field>Search results with excluded words will not be shown.
